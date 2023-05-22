@@ -1,0 +1,39 @@
+
+/* left */
+.left {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  background-color: #1aa1f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+  top:0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+
+
+    width: 50%; /* permet à l'en-tête de prendre toute la largeur de la page */
+    height: 100%;
+
+}
+
+.left-content div {
+  display: flex;
+  align-items: center;
+  margin: 4rem;
+  color: #fff;
+  width:100%
+}
+
+.left-content i {
+  font-size: 3rem;
+  margin-right: 2rem;
+}
+
+.left-content-heading {
+  font-size: 2rem;
+}
+

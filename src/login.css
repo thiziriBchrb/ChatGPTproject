@@ -1,0 +1,135 @@
+/* .container {
+    background-color: #2097ec;
+    position: fixed;
+
+    right: 0;
+    margin-left:30%;
+  
+    width: 100%;
+    height: 4.5rem;
+    margin-right: 1rem;
+    font-size: 1.6rem;
+    padding: 0 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+  }   */
+
+  /* .logForm{
+    margin-top: 20%;
+    background-color:  #d4520c;
+    margin-left: 20%;
+    margin-right: 1rem;
+    font-size: 1.6rem;
+    padding: 0 1rem;
+    position:fixed;
+    border-radius: 0.5rem;
+    
+    border-radius: 8px;
+  }
+   */
+
+ 
+  
+
+  
+  
+  
+  /* p.error {
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+  } */
+    
+  
+  label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1da1f2;
+    display: block;
+
+    
+  }
+  
+  .logo {
+    color: #fff;
+    font-size: 2em;
+  }
+    
+  form {
+
+    margin-top: 10%;
+    align-items: center;
+    margin-left: 40%; 
+    background-color: #f1f1f1;
+
+    width: 400px;
+    /* border: 1px solid #6e6e6e; */
+    border-radius: 5%;
+    border: 3px solid #f1f1f1;
+
+
+   
+  }
+  
+
+  input[type="email"],
+  input[type="password"] {
+
+    width: 30rem;
+    height: 3.5rem;
+    margin-bottom: 1rem;
+    border: 0.1rem solid #ddd;
+    border-radius: 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.5rem;
+    transition: background-color 0.3s;
+  }
+  
+  
+  .btn {
+    background-color:#1da1f2;
+    
+    
+    border: none !important;
+    color: rgb(255, 255, 255) ;
+    font-weight: 900 !important;
+    text-transform: inherit !important;
+    border-radius: 30px !important;
+    width: 80px;
+    /* height: 40px !important; */
+    margin-left: 30%;
+    
+
+  }
+  .col-md-6 {
+    border: 1px solid black;
+  }
+
+
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background-color: #1da1f2;
+  
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+  
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+   
+    color: white; /* couleur du texte de l'en-tête */
+
+  
+    width: 100%; /* permet à l'en-tête de prendre toute la largeur de la page */
+  }
+  
+ 
+  
+  

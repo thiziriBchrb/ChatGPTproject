@@ -1,0 +1,57 @@
+  .newpost {
+    
+    padding-bottom: 10px;
+    border-bottom: 2px solid #cfc1c1;
+    border-right: 2px solid #cfc1c1;
+    margin-left: -30rem;
+    margin-right: 20%;
+    margin-top: 5rem;
+
+  }
+
+  .newpost > form {
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    width: 60%;
+
+    height: 15%;
+    border: #151414;
+
+  }
+
+  .newpostdiv {
+    padding: 25px;
+    display: flex;
+  }
+
+  .newpostdiv >textarea {
+    flex: 1;
+    margin-left: -15rem;
+    width: 600px;
+    
+    padding: 5%;
+    
+    border: none;
+    word-break: break-all;
+    
+  }
+
+    .tweetBox__tweetButton {
+      background-color: #1da1f2;
+      border: none !important;
+      color: white !important;
+      font-weight: 900 !important;
+      text-transform: inherit !important;
+      border-radius: 30px !important;
+      width: 80px;
+      height: 40px !important;
+      margin-top: 20px !important;
+      margin-left: auto !important;
+      margin-bottom: 2px;
+    }
+
+    .header{
+      background-color: #1da1f2;
+    }
