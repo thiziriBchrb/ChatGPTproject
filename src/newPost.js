@@ -5,6 +5,7 @@ import './newPost.css'
 import {getAuth} from "firebase/auth";
 import {useParams} from "react-router-dom";
 import axios from 'axios';
+import {Avatar} from "@mui/material";
 const NewPost = (props) => {
     const { userId } = props;
     const auth = getAuth();
@@ -22,6 +23,22 @@ const NewPost = (props) => {
     const [ setReplies] = useState([]);
     const [postComments] = useState("");
     const [showCommentModal, setShowCommentModal] = useState(false);
+
+     const getphoto = async (userId) => {
+    const firestore = getFirestore();
+    const userDocRef = doc(firestore, "users", userId);
+
+    const userDocSnapshot = await getDoc(userDocRef);
+
+    if (userDocSnapshot.exists()) {
+      const userData = userDocSnapshot.data();
+
+      return userData.photo;
+
+    }
+    return null;
+  }
+
     const getUsername = async (userId) => {
         const firestore = getFirestore();
         const userDocRef = doc(firestore, "users", userId);
@@ -31,28 +48,14 @@ const NewPost = (props) => {
         if (userDocSnapshot.exists()) {
           const userData = userDocSnapshot.data();
     
-          return userData.firstname + ' ' + userData.name;
+          return userData.firstname + userData.name;
     
         }
     
         return null;
       };
 
-      function addPost(text) {
-        axios.post('http://127.0.0.1:5000/analyze-sentiment', { text })
-          .then(response => {
-            const sentimentResult = response.data.result;
-            // Ajoutez le texte du poste et le résultat de l'analyse de sentiment dans la collection de posts
-            const newPost = {
-              text: text,
-              sentiment: sentimentResult
-            };
-            // Faites quelque chose pour ajouter newPost à votre collection de posts (par exemple, une fonction ou un appel API pour ajouter à une base de données)
-          })
-          .catch(error => {
-            console.error('Erreur lors de l\'appel à l\'API', error);
-          });
-      }
+      
     const handleNewPostSubmit = async (event) => {
         event.preventDefault();
         if (newPostText.trim() !== "") {
@@ -60,6 +63,8 @@ const NewPost = (props) => {
             try {
                 // Ajouter un nouveau post à la base de données Firebase
                 const username = await getUsername(userId)
+                const photo = await getphoto(userId)
+      
                 const docRef = await addDoc(collection(firestore, "posts"), {
                     text: newPostText.trim(),
                     createdAt: new Date(),
@@ -67,7 +72,8 @@ const NewPost = (props) => {
                     likes: 0,
                     shares:0,
                     comments: [],
-                    username: username
+                    username: username,
+                    photo:photo
                 });
 
             
@@ -93,7 +99,16 @@ const NewPost = (props) => {
     }
         }
     };
+    const [username, setUsername] = useState('');
 
+    useEffect(() => {
+      const fetchUsername = async () => {
+        const username = await getUsername(userId);
+        setUsername(username || '');
+      };
+    
+      fetchUsername();
+    }, [userId]);
 
     return (
        
@@ -101,13 +116,16 @@ const NewPost = (props) => {
 
 
     <header>
-        
-        <h1> <MdPublic size={30}  />SpeakUp</h1>
+ 
+    <img src={require("./logo.png")}/>
+  
+        <h1> SpeakUp </h1>
         
     </header>
             <form className="new-post-form" onSubmit={handleNewPostSubmit}>
+  
                 <div className="newpostdiv">
-                    <textarea type="text" placeholder="What's happening" value={newPostText} onChange={(event) => setNewPostText(event.target.value)} />
+                    <textarea type="text" placeholder={`What's happening @${username}?`} value={newPostText} onChange={(event) => setNewPostText(event.target.value)} />
                 </div>
                 <button className="tweetBox__tweetButton" type="submit">Share</button>
             </form>

@@ -75,7 +75,22 @@ const Home= () => {
     if (userDocSnapshot.exists()) {
       const userData = userDocSnapshot.data();
 
-      return userData.firstname + ' ' + userData.name;
+      return '@'+userData.firstname + userData.name;
+
+    }
+
+    return null;
+  };
+  const getphoto = async (userId) => {
+    const firestore = getFirestore();
+    const userDocRef = doc(firestore, "users", userId);
+
+    const userDocSnapshot = await getDoc(userDocRef);
+
+    if (userDocSnapshot.exists()) {
+      const userData = userDocSnapshot.data();
+
+      return userData.photo;
 
     }
 
@@ -161,6 +176,7 @@ const Home= () => {
       try {
         // Ajouter un nouveau commentaire à la base de données Firebase
         const username = await getUsername(user.uid);
+        const photo = await getphoto(user.uid);
         const commentDocRef = await addDoc(collection(firestore, "comments"), {
           text: newCommentText.trim(),
           createdAt: new Date(),
@@ -172,23 +188,15 @@ const Home= () => {
           comment_parent_id:'',
           postId: id_post,
           username:username,
+          photo:photo,
         });
-      //   const commentRef = doc(firestore, "comments", commentDocRef.id);
 
-      //   await updateDoc(commentRef, { comment_id: commentDocRef.id });
-
-
-      // setNewCommentText("");
-      // setShowCommentForm(false)
-      // } catch (error) {
-      //   console.error("Error adding document: ", error);
-      // }
       const response = await fetch('http://127.0.0.1:5000/analyze-sentiment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: newPostText }),
+        body: JSON.stringify({ text: newCommentText }),
       });
       const data = await response.json();
       const sentimentResult = data.sentiment;
@@ -198,10 +206,12 @@ const Home= () => {
       await updateDoc(commentDocRef, { sentiment: sentimentResult });
 
       // Mettre à jour le champ id_post avec l'ID du document
-      await updateDoc(commentDocRef, { id_post: commentDocRef.id });
-      // setNewPostText("");
+      await updateDoc(commentDocRef, { comment_id: commentDocRef.id });
+
+ 
       setNewCommentText("");
-      setShowCommentForm(false)
+      setShowCommentForm(false);
+      fetchComments();
     } catch (error) {
       console.error("Error adding document: ", error);
     }
@@ -215,6 +225,7 @@ const Home= () => {
       try {
         // Ajouter une nouvelle réponse à la base de données Firebase
         const username = await getUsername(user.uid);
+        const photo = await getphoto(user.uid);
         const replyDocRef = await addDoc(collection(firestore, "comments"), {
           text: newReplyText.trim(),
           createdAt: new Date(),
@@ -224,15 +235,29 @@ const Home= () => {
           nbReplies: 0,
           nbLikes: 0,
           comment_parent_id: commentId ,// le commentaire parent
-          username:username
+          username:username,
+          photo:photo
         });
+        const response = await fetch('http://127.0.0.1:5000/analyze-sentiment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: newReplyText }),
+      });
+      const data = await response.json();
+      const sentimentResult = data.sentiment;
 
+      // Ajouter l'attribut "sentiment" avec le résultat de l'analyse de sentiment
+
+        
         const replyRef = doc(firestore, "comments", replyDocRef.id);
         await updateDoc(replyRef, { comment_id: replyDocRef.id });
-
+        await updateDoc(replyRef, { sentiment: sentimentResult });
+        
+        setNewReplyText("");
         fetchComments();
         fetchReplies();
-        setNewReplyText("");
       } catch (error) {
         console.error("Error adding document: ", error);
       }
@@ -258,10 +283,6 @@ const Home= () => {
   useEffect((id) => {
     fetchComments(id);
   }, []);
-
-  
-  
-  
 
   const fetchReplies = async (commentId) => {
     if (commentId) {
@@ -290,10 +311,7 @@ return (
 
   <div className="body">
 
-      <div className="header">
-      <h1 className="logo">Twitter </h1>
-      </div>
-
+     
 
       <Navigation  userId={userId}/>
 
@@ -301,16 +319,17 @@ return (
 
 
 
-    <div className="tweet">
+    <div className="tweet" >
 
       {posts.map((post) => (
 
         <div className="postcontent" key={post.id_post}>
-          <div className="post__avatar">
+          
+          <div className="post__avatar" style={ {display : showComments ? 'none' : ''}}>
            {/* <p className="sentiment">  {post.sentiment}</p>  */}
-
-          < PostSentiment  sentiment={post.sentiment}/> 
-            <Avatar src="https://media.istockphoto.com/id/1313958250/fr/vectoriel/ic%C3%B4ne-de-profil-davatar-utilisateur-illustration-noire-de-vecteur-sur-le-fond.jpg?s=1024x1024&w=is&k=20&c=JmBbZIrT3YK0Zjdpco3VSboEQOuQFNCujNAjePQpCtw=" />
+           < PostSentiment  sentiment={post.sentiment}/>
+          {/* "https://media.istockphoto.com/id/1313958250/fr/vectoriel/ic%C3%B4ne-de-profil-davatar-utilisateur-illustration-noire-de-vecteur-sur-le-fond.jpg?s=1024x1024&w=is&k=20&c=JmBbZIrT3YK0Zjdpco3VSboEQOuQFNCujNAjePQpCtw=" */}
+            <Avatar src={post.photo} />
             <p className="post-user">{post.username}</p>
             <span className="post-date">Posted on {format(post.createdAt.toDate(), 'MMMM dd')}</span>
           </div>
@@ -342,7 +361,7 @@ return (
        
           <div className="comment-content"  key={post.id_post}>
          
-          <h1> Reply to @{post.username} </h1>
+          <h1> Reply to {post.username} </h1>
           <button className="btn_cancel" onClick={() => setShowCommentForm(false)}><AiOutlineCloseCircle/></button>
             <form onSubmit={(event) => handleNewCommentSubmit(event, post.id_post )}>
          
@@ -350,7 +369,8 @@ return (
                 
                 <div className="postcontent_comment" key={post.id_post}>
                   <div className="post__avatar">
-                    <Avatar src="https://media.istockphoto.com/id/1313958250/fr/vectoriel/ic%C3%B4ne-de-profil-davatar-utilisateur-illustration-noire-de-vecteur-sur-le-fond.jpg?s=1024x1024&w=is&k=20&c=JmBbZIrT3YK0Zjdpco3VSboEQOuQFNCujNAjePQpCtw=" />
+                
+                    <Avatar src={post.photo} />
                     {/* <p className="post-user">kkkkkk{post.username}</p> */}
                     <span className="post-date">Posted on {format(post.createdAt.toDate(), 'MMMM dd')}</span>
                 </div>
@@ -392,11 +412,13 @@ return (
 {/* <div className="comment-modal-content"  key={post.id_post}> */}
 <button className="comment_btn_cancel" onClick={() => setShowComments(false)}><AiOutlineCloseCircle/></button>
 
-
+{/* {document.getElementById("postcontent").style.display = "none"} */}
 <div  className="postcontent_comments" key={post.id_post}>
     <div className="post__avatar">
-      <Avatar src="https://media.istockphoto.com/id/1313958250/fr/vectoriel/ic%C3%B4ne-de-profil-davatar-utilisateur-illustration-noire-de-vecteur-sur-le-fond.jpg?s=1024x1024&w=is&k=20&c=JmBbZIrT3YK0Zjdpco3VSboEQOuQFNCujNAjePQpCtw=" />
-      
+      {/* <Avatar src="https://media.istockphoto.com/id/1313958250/fr/vectoriel/ic%C3%B4ne-de-profil-davatar-utilisateur-illustration-noire-de-vecteur-sur-le-fond.jpg?s=1024x1024&w=is&k=20&c=JmBbZIrT3YK0Zjdpco3VSboEQOuQFNCujNAjePQpCtw=" /> */}
+     <Avatar src={post.photo} />
+     {console.log(post.photo)}
+      <p className="post-user">{post.username}</p>
       <span className="post-date">Posted on {format(post.createdAt.toDate(), 'MMMM dd')}</span>
   </div>
 
@@ -409,21 +431,26 @@ return (
 
 <div className="comment" key={comment.id}>
 
-   
+
     <div className="comment_post__avatar">
-      <Avatar src="https://media.istockphoto.com/id/1313958250/fr/vectoriel/ic%C3%B4ne-de-profil-davatar-utilisateur-illustration-noire-de-vecteur-sur-le-fond.jpg?s=1024x1024&w=is&k=20&c=JmBbZIrT3YK0Zjdpco3VSboEQOuQFNCujNAjePQpCtw=" />
+      < PostSentiment  sentiment={comment.sentiment}/> 
+      <Avatar src={comment.photo} />
       {/* <p className="post-user">kkkkkk{post.username}</p> */}
+      
+
       <p className="post-user">{comment.username}</p>
+    
       <span className="post-date">Posted on {format(comment.createdAt.toDate(), 'MMMM dd')}</span>
   </div>
+  
   <p className="comment-text">
       {comment.text}
       
     </p>
-    <button className="reply-button" onClick={() => setReplyToCommentId(comment.id)}>
+    {/* <button className="reply-button" onClick={() => setReplyToCommentId(comment.id)}>
         Reply
-    </button>
-    {replyToCommentId === comment.id && (
+    </button> replyToCommentId === comment.id && */}
+    {(
       <form className="reply-form" onSubmit={(event) => handleNewReplySubmit(event, comment.id)}>
         <textarea
           className="new-reply-input"
@@ -439,17 +466,19 @@ return (
       
     )}
       <button className="show-replies-button" onClick={() => setShowReplies(!showReplies)}>
-  {showReplies ? 'Masquer les réponses' : 'Afficher les réponses'}
+  {showReplies ? 'hide replies' : 'show replies'}
 </button>
 {showReplies && (
   <ul className="reply-list">
-    <h4 className="replies-heading">Réponses</h4>
+    
     {comments
       .filter((reply) => reply.comment_parent_id === comment.id)
       .map((reply) => (
         <li className="comment-post-text" key={reply.id}>
                <div className="comment_post__avatar">
-                <Avatar src="https://media.istockphoto.com/id/1313958250/fr/vectoriel/ic%C3%B4ne-de-profil-davatar-utilisateur-illustration-noire-de-vecteur-sur-le-fond.jpg?s=1024x1024&w=is&k=20&c=JmBbZIrT3YK0Zjdpco3VSboEQOuQFNCujNAjePQpCtw=" />
+               < PostSentiment  sentiment={reply.sentiment}/>
+                <Avatar src={reply.photo} />
+
                 {/* <p className="post-user">kkkkkk{post.username}</p> */}
                 <p className="post-user">{reply.username}</p>
                 <span className="post-date">Posted on {format(reply.createdAt.toDate(), 'MMMM dd')}</span>

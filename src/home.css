@@ -293,7 +293,7 @@
 
 .comments-section{
   position: fixed;
-  top: 0;
+  top: 4rem;
   left: 0;
   width: 100%;
   height: 100%;
@@ -326,7 +326,7 @@
 
 .comment_btn_cancel {
   position: fixed;
-  top: 88px;
+  top: 150px;
   right:300px;
   background-color: transparent;
   border: none;
@@ -351,7 +351,7 @@
   
   background-color: rgb(255, 255, 255) ;
  width: 200px;
- height:400px;
+ height:450px;
  margin-right: 20%;
 
   overflow-y:auto;
@@ -472,5 +472,18 @@ margin-bottom: 10px;
   line-height: 16px;
   color: #222323;
 } 
+
+.show-replies-button{
+    margin-top:3rem;
+    background-color: transparent;
+    color : #50caca;
+
+    text-underline-offset:#50caca ;
+    padding: 8px 16px;
+   border: none;
+   border-radius: 5px;
+   font-size: 10px;
+   cursor: pointer;
+}
 
 

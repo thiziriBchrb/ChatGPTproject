@@ -117,6 +117,19 @@
     flex-direction: column;
     width: 40%;
   }
+  
+  .middle-content img {
+    position: absolute;
+    top: -6rem;
+    left: -82rem;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    padding: 25%;
+    padding: 200px;
+
+  }
 
   .middle-content i {
     font-size: 4rem;
@@ -126,13 +139,15 @@
 
   .middle-content h1 {
     font-size: 2.8rem;
-    margin-bottom: 4rem;
+    margin-bottom: 0.5rem;
     line-height: 4rem;
+    text-align: center;
   }
 
   .middle-content h4 {
-    font-size: 2rem;
+    font-size: 4rem;
     margin-bottom: 2rem;
+    text-align: center;
   }
 
   .middle-content button {

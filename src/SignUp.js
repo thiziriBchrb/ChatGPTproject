@@ -39,7 +39,8 @@ const SignUp = () => {
         tweetsCount: 0,
         followingCount: 0,
         followersCount: 0,
-        followers: []
+        followers: [],
+        photo: ''
       });
 
       history(`/home/${userCredential.user.uid}`);
@@ -76,8 +77,8 @@ const SignUp = () => {
   return (
     <div className="container">
       <header>
-        
-        <h1> <MdPublic size={30}  />SpeakUp</h1>
+      <img src={require("./logo.png")}/>
+        <h1> SpeakUp</h1>
         
     </header>
       {/* <h1 className="signup-heading">Sign Up</h1> */}
@@ -123,8 +124,7 @@ const SignUp = () => {
               value={signupPassword}
               onChange={(e) => setSignupPassword(e.target.value)}
             />
-            <input type="file" onChange={handleFileChange} />
-               <button type="submit">Télécharger</button>
+            
           </div>
           <button type="submit" className="btn btn-primary" onClick={handleSignUp}>
             Sign Up

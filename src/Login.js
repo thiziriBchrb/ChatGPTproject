@@ -47,8 +47,8 @@ const Login = () => {
 
       <div className="container">
     <header>
-        
-        <h1> <MdPublic size={30}  />SpeakUp</h1>
+    <img src={require("./logo.png")}/>
+        <h1> SpeakUp</h1>
         
     </header>
         <div className="row mt-5">

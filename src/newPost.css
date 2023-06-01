@@ -5,7 +5,7 @@
     border-right: 2px solid #cfc1c1;
     margin-left: -30rem;
     margin-right: 20%;
-    margin-top: 5rem;
+    margin-top: 10rem;
 
   }
 
@@ -54,4 +54,17 @@
 
     .header{
       background-color: #1da1f2;
+    }
+    header img{
+      /* padding: 2px;*/
+      display: flex; 
+      max-width: 60px;
+      border-radius: 20px;
+ 
+      margin-left: 0;
+
+
+    }
+    header h1{
+      margin-right: 150rem;
     }

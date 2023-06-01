@@ -16,10 +16,10 @@ function Navigation(props) {
         <MdSearch size={20} />
         Explore
       </a> */}
-      <a href="/notifications" className="navigate-link">
+      {/* <a href="/notifications" className="navigate-link">
         <MdNotifications size={20} />
         Notifications
-      </a>
+      </a> */}
       {/* <a href="/login" className="navigate-link">
         <MdPerson size={20} />
         Login

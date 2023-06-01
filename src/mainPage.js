@@ -49,9 +49,9 @@ const MainPage = () => {
 
         <div className="middle-content">
           <i className="fas fa-dove"></i>
-          <MdPublic  size={40}/>
+          <img src={require("./logo.png")}/>
           <h1 className="app-name">SpeakUp</h1>
-          <h2> Explore what's happening in the world</h2>
+          <h2> Unleash your voice, empower change</h2>
 
           <button type="button" className="sign-up" onClick={handleSignUpClick}>
           Sign Up
